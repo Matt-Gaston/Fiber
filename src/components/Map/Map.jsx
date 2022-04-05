@@ -30,7 +30,7 @@ class Map extends React.Component {
             <div style={{ height: "100vh", width: "100%" }}>
                 <GoogleMapReact
                     bootstrapURLKeys={{
-                        key: "Map-API-key-here",
+                        key: "<key here>",
                     }}
                     defaultCenter={this.startCoords}
                     defaultZoom={14}
@@ -38,8 +38,8 @@ class Map extends React.Component {
                 >
                     {Junctions.map((Junct) => (
                         <Marker
-                            key={Junct.name}
-                            text={Junct.name}
+                            key={Junct.Name}
+                            text={Junct.Name}
                             lat={Junct.coords.lat}
                             lng={Junct.coords.lng}
                             selected={Junct.selected}

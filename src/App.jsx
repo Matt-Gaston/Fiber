@@ -3,7 +3,8 @@ import Map from "./components/Map/Map";
 import List from "./components/List/List";
 import Header from "./components/Header/Header";
 import { CssBaseline, Grid } from "@mui/material";
-import stuff from "./Fiber Asset locations.csv";
+import data from "./data.js";
+import $ from "jquery";
 
 const mapData2 = [
     { name: "JNC1", coords: { lat: 37.95239, lng: -91.77998 } },
@@ -11,35 +12,6 @@ const mapData2 = [
     { name: "JNC3", coords: { lat: 37.95239, lng: -91.78998 } },
     { name: "JNC4", coords: { lat: 37.96239, lng: -91.76 } },
 ];
-
-function csvJSON(csv) {
-    var lines = csv.split("\n");
-
-    var result = [];
-
-    var headers = lines[0].split(",");
-
-    for (var i = 1; i < lines.length; i++) {
-        var obj = {};
-        var currentline = lines[i].split(",");
-
-        for (var j = 0; j < headers.length; j++) {
-            obj[headers[j]] = currentline[j];
-        }
-
-        result.push(obj);
-    }
-
-    //return result; //JavaScript object
-    return JSON.stringify(result); //JSON
-}
-
-// async function fetchMapData() {
-//     let response = await fetch(stuff);
-//     let data = await response.text();
-//     let jsonData = csvJSON(data);
-//     console.log(jsonData);
-// }
 
 class App extends React.Component {
     constructor(props) {
@@ -50,17 +22,20 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        let temp = mapData2;
-        temp.forEach((junct) => {
-            junct.selected = false;
-        });
-        this.setState({ mapDataAndSelect: temp });
+        var locations = [];
+        for (var mark of data) {
+            var n = Object.assign(mark, { selected: false });
+            // console.log(n);
+            locations.push(n);
+        }
+        console.log(locations);
+        this.setState({ mapDataAndSelect: locations });
     }
 
     onJunctionClick = (key) => {
         this.setState((state) => {
             const index = state.mapDataAndSelect.findIndex(
-                (e) => e.name === key
+                (e) => e.Name === key
             );
             state.mapDataAndSelect[index].selected =
                 !state.mapDataAndSelect[index].selected;
