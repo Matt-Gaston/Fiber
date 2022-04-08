@@ -5,6 +5,7 @@ import Header from "./components/Header/Header";
 import { CssBaseline, Grid } from "@mui/material";
 import data from "./data.js";
 import $ from "jquery";
+import distances from "./distances.js";
 
 const mapData2 = [
     { name: "JNC1", coords: { lat: 37.95239, lng: -91.77998 } },
@@ -18,6 +19,7 @@ class App extends React.Component {
         super(props);
         this.state = {
             mapDataAndSelect: [],
+            connections: [],
         };
     }
 

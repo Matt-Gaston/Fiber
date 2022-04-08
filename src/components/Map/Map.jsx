@@ -14,6 +14,7 @@ function Marker(props) {
                 justifyContent: "center",
                 borderRadius: "100%",
                 transform: "translate(-50%, -50%)",
+                whiteSpace: "nowrap",
             }}
             onClick={props.onClick}
         >
@@ -24,27 +25,43 @@ function Marker(props) {
 
 class Map extends React.Component {
     startCoords = { lat: 37.948126, lng: -91.77157 };
+
     render() {
+        const MapStyles = [
+            {
+                featureType: "all",
+                elementType: "labels.text",
+                stylers: [{ visibility: "off" }],
+            },
+            {
+                featureType: "poi",
+                elementType: "labels.icon",
+                stylers: [{ visibility: "off" }],
+            },
+        ];
         const Junctions = this.props.mapData;
         return (
             <div style={{ height: "100vh", width: "100%" }}>
                 <GoogleMapReact
                     bootstrapURLKeys={{
-                        key: "<key here>",
+                        key: "Key here",
                     }}
                     defaultCenter={this.startCoords}
                     defaultZoom={14}
                     onChildClick={this.props.onClick}
+                    defaultOptions={{ styles: MapStyles, scrollwheel: "true" }}
                 >
-                    {Junctions.map((Junct) => (
-                        <Marker
-                            key={Junct.Name}
-                            text={Junct.Name}
-                            lat={Junct.coords.lat}
-                            lng={Junct.coords.lng}
-                            selected={Junct.selected}
-                        />
-                    ))}
+                    {Junctions.map(function (Junct) {
+                        return (
+                            <Marker
+                                key={Junct.Name}
+                                text={Junct.Name.match(/\n(.*)/g)}
+                                lat={Junct.coords.lat}
+                                lng={Junct.coords.lng}
+                                selected={Junct.selected}
+                            />
+                        );
+                    })}
                 </GoogleMapReact>
             </div>
         );
