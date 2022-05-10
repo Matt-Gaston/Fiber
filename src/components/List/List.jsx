@@ -1,13 +1,26 @@
+//this component is the list on the left hand side
+//figures out the distances and what boxes arent connected
+
 import React from "react";
 import distances from "../../distances";
 
 class List extends React.Component {
-    getDistancesAndNames(selectedLocs) {
+    //this function gets juctions that have been selected
+    //takes all selected locations and checks them against objects from distances.js
+    //if a key exists in distances.js that has 2 unique selected locations it is appended
+    //to an array and returned
+    getSelectedJunctions(selectedLocs) {
         let locsAndDists = [];
+        //nested for loop, iterates over all selected locations
         for (let loc1 of selectedLocs) {
             for (let loc2 of selectedLocs) {
+                //fianlly iterates over valid junctions
                 for (let validJ of distances) {
                     if (
+                        //loc1 and loc2 should not be same object
+                        //the key of a valid junction should include loc1 and loc2
+                        //the final array to be returned should not already contain the junction
+                        //combos not perms
                         loc1 !== loc2 &&
                         validJ["Key"].includes(loc1["Name"]) &&
                         validJ["Key"].includes(loc2["Name"]) &&
@@ -21,7 +34,10 @@ class List extends React.Component {
         return locsAndDists;
     }
 
-    getSelectedBoxes(locsAndDists) {
+    //returns JSX
+    //locsAndDists - json object containing objects from distances.js
+    //               should only be passed locations that are linked up according to key
+    getSelectedBoxDisplay(locsAndDists) {
         return (
             <div>
                 <h1>Selected Boxes:</h1>
@@ -34,7 +50,9 @@ class List extends React.Component {
         );
     }
 
-    getUnlinkedLocations(selectedLocs, locsAndDists) {
+    //finds locations that are selected but do not yet have another corresponding location to be linked with
+    //returns a JSX element
+    getUnlinkedLocsDisplay(selectedLocs, locsAndDists) {
         let unlinkedLocs = [];
         for (let loc of selectedLocs) {
             let included = false;
@@ -62,7 +80,8 @@ class List extends React.Component {
         );
     }
 
-    getTotalDistance(locsAndDists) {
+    //
+    getTotalDistanceDisplay(locsAndDists) {
         let distTotal = 0;
         for (let loc of locsAndDists) {
             distTotal += parseInt(loc.Distance);
@@ -75,6 +94,7 @@ class List extends React.Component {
         );
     }
 
+    //returns a JSX element that displays the total distance or states there are no connections
     getSelectedLocations() {
         let selectedLocs = [];
         for (let loc of this.props.Juncts) {
@@ -86,15 +106,19 @@ class List extends React.Component {
     }
 
     render() {
+        //get data for functions
         let selectedLocs = this.getSelectedLocations();
 
-        let locsAndDists = this.getDistancesAndNames(selectedLocs);
-        let selectedBoxDisplay = this.getSelectedBoxes(locsAndDists);
-        let unlinkedLocDisplay = this.getUnlinkedLocations(
+        //get updated display elements
+        let locsAndDists = this.getSelectedJunctions(selectedLocs);
+        let selectedBoxDisplay = this.getSelectedBoxDisplay(locsAndDists);
+        let unlinkedLocDisplay = this.getUnlinkedLocsDisplay(
             selectedLocs,
             locsAndDists
         );
-        let distDisplay = this.getTotalDistance(locsAndDists);
+        let distDisplay = this.getTotalDistanceDisplay(locsAndDists);
+
+        //return JSX to be rendered
         return (
             <div>
                 {selectedBoxDisplay}

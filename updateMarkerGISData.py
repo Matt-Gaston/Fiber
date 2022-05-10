@@ -1,3 +1,12 @@
+#this script updates data.js.
+#uses selenium to get the data from rmu integritygis
+#hopefully this doesn't have to be changed, if it does have fun!
+
+
+#in case of username/password change edit these variables
+uname = "user here"
+pw = "pw here"
+
 import os
 import sys
 from selenium import webdriver
@@ -14,8 +23,6 @@ if (os.path.exists(dlPath)):
     os.remove(dlPath)
 
 try:
-    uname = "user name here"
-    pw = "pw here"
     driver = webdriver.Chrome()
     driver.get("https://rollamugis.integritygis.com/H5/Index.html?viewer=rollamu#")
 
@@ -125,10 +132,10 @@ else:
         with open(dlPath, 'r') as f:
             freader = csv.DictReader(f, delimiter=',', quotechar='"')
             for row in freader:
-                if row['Name'] and row['Latitude'] and row['Longitude']:
+                if row['Name'] and row['Latitude'] and row['Longitude'] and (row['Name'] != "Fiber Pedestal"):
                     newR = {"Name":row['Name'], "coords":{"lat":row['Latitude'], "lng":row['Longitude']}}
                     data.append(newR)
-        with open('data.js', 'w') as dataf:
+        with open('src/data.js', 'w') as dataf:
             jsonString = json.dumps(data, indent = 4)
             dataf.write('var data = ' + jsonString + ';\nexport default data;')
         

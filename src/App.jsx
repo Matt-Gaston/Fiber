@@ -1,19 +1,15 @@
+//Main entry point for app
+//this uses google-map-react for easy integration of google maps api with react
+
 import React from "react";
 import Map from "./components/Map/Map";
 import List from "./components/List/List";
 import Header from "./components/Header/Header";
 import { CssBaseline, Grid } from "@mui/material";
 import data from "./data.js";
-import $ from "jquery";
 import distances from "./distances.js";
 
-const mapData2 = [
-    { name: "JNC1", coords: { lat: 37.95239, lng: -91.77998 } },
-    { name: "JNC2", coords: { lat: 37.95239, lng: -91.76998 } },
-    { name: "JNC3", coords: { lat: 37.95239, lng: -91.78998 } },
-    { name: "JNC4", coords: { lat: 37.96239, lng: -91.76 } },
-];
-
+//top level DOM element
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -23,17 +19,30 @@ class App extends React.Component {
         };
     }
 
+    //if component mounts this function loads in the map data
+    //map data is stored in data.js
+    //all map data that get loaded in gets mapped as a marker
     componentDidMount() {
-        var locations = [];
-        for (var mark of data) {
-            var n = Object.assign(mark, { selected: false });
-            // console.log(n);
-            locations.push(n);
+        let locations = [];
+        //iterate through and only load in points that actually have a distance associated with them
+        for (let mark of data) {
+            for (let validJunct of distances) {
+                if (
+                    validJunct.Key.includes(mark.Name) &&
+                    !locations.includes(mark)
+                ) {
+                    //also assign a selected property, this allows visual changes as well as for being passed to the list to see what needs to be added up
+                    var n = Object.assign(mark, { selected: false });
+                    // console.log(n);
+                    locations.push(n);
+                    break;
+                }
+            }
         }
-        console.log(locations);
         this.setState({ mapDataAndSelect: locations });
     }
 
+    //when a marker is clicked this changes the selected property, internal styling changes the color
     onJunctionClick = (key) => {
         this.setState((state) => {
             const index = state.mapDataAndSelect.findIndex(
