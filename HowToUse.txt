@@ -1,0 +1,8 @@
+For maintaining:
+    updateMarkerGISData.py - logs in to GIS system and gets all markers that are valid (have name, lon/lat). Formats and outputs to data.js
+    updateDistanceData.py - grabs data from fiber footages spreadsheet. Formats and outputs to distances.js
+    
+How to run:
+    if not built - enter: "npm start" in console, pay attention to port it says it will be running on. Navigate to computer's_IP:port
+
+    if built: - enter: "npm run build" in console. Move new build files to where the server is
